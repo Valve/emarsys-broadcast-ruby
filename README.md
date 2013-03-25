@@ -1,6 +1,7 @@
 # Emarsys::Broadcast
 
-TODO: Write a gem description
+WORK IN PROGRESS, NOT DONE YET
+==============================
 
 ## Installation
 
