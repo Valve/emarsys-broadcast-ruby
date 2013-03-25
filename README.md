@@ -2,6 +2,8 @@
 
 WORK IN PROGRESS, NOT DONE YET
 ==============================
+[![Build Status](https://travis-ci.org/Valve/emarsys-broadcast-ruby.png)](https://travis-ci.org/Valve/emarsys-broadcast-ruby)
+[![Coverage Status](https://coveralls.io/repos/Valve/emarsys-broadcast-ruby/badge.png?branch=master)](https://coveralls.io/r/Valve/emarsys-broadcast-ruby)
 
 ## Installation
 
