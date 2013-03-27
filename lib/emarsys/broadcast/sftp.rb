@@ -21,7 +21,7 @@ module Emarsys
         raise ConfigurationError, 'sftp_password must be configured' if config.sftp_password.nil? || config.sftp_password.empty?
         raise ConfigurationError, 'sftp_port must be present' unless config.sftp_port
         if (!config.sftp_port.is_a?(Integer) || !((1..65535).include? config.sftp_port))
-          raise ConfigurationError, 'sftp_port must be integer between 1 and 65536' 
+          raise ConfigurationError, 'sftp_port must be integer between 1 and 65535' 
         end
       end
     end

@@ -11,6 +11,24 @@ module Emarsys
         @sender = options[:sender]
       end
 
+      def build(subject, body)
+        builder = Nokogiri::XML::Builder.new do |xml|
+          xml.batch {
+            xml.name @name
+            xml.runDate format_time(@send_time)
+            xml.properties {
+              xml.property("key" => "Sender") { xml.text! @sender }
+              xml.property("key" => "Language") { xml.text! "en" }
+              xml.property("key" => "Encoding") { xml.text! "UTF-8" }
+              xml.property("key" => "Domain") { xml.text! "e3.emarsys.net" }
+            }
+            xml.subject subject
+            xml.html body
+          }
+        end 
+        builder.to_xml  
+      end
+
 
       private 
 
@@ -20,6 +38,10 @@ module Emarsys
         raise ArgumentError, 'send_time is required' if (options[:send_time].nil?)
         raise ArgumentError, 'sender is required' if (options[:sender].nil? || options[:sender].empty?)
         raise ArgumentError, 'sender must be valid email' unless Email::validate options[:sender]
+      end
+
+      def format_time(time)
+        time.strftime("%Y-%m-%dT%H:%M:%S%z")
       end
     end
   end

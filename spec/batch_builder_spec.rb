@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe Emarsys::Broadcast::BatchBuilder do
+  let(:valid_options){options = {name: 'batch_name', send_time: Time.parse('2013-12-31'), sender: 'test@example.com'}}
+  let(:batch_builder){batch_builder = Emarsys::Broadcast::BatchBuilder.new(valid_options)}
   describe 'initialize' do
     context 'with valid options' do
-      let(:options){options = {name: 'batch_name', send_time: Time.now, sender: 'test@example.com'}}
-      let(:batch_builder){batch_builder = Emarsys::Broadcast::BatchBuilder.new(options)}
 
       it 'should create a new instance of BatchBuilder from valid options' do
         expect(batch_builder).not_to be_nil
@@ -55,6 +55,20 @@ describe Emarsys::Broadcast::BatchBuilder do
           Emarsys::Broadcast::BatchBuilder.new(name: 'batch_name', send_time: Time.now, sender: 'invalid@sender yo')
         }.to raise_error ArgumentError
       end
+    end
+  end
+
+  describe '#build' do
+    context 'with valid arguments' do
+      it 'should return a valid Emarsys Batch XML string' do
+        actual_xml = batch_builder.build('subject', 'body').chomp
+        fixture_path = File.dirname(__FILE__) + '/fixtures/minimal_batch.xml'
+        expected_xml = File.read(fixture_path)
+        expect(actual_xml).to eq expected_xml
+      end
+    end
+
+    context 'with invalid arguments' do
     end
   end
 end
