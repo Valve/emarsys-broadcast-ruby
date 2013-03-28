@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Emarsys::Broadcast::BatchBuilder do
-  let(:valid_options){options = {name: 'batch_name', send_time: Time.new(2013, 12, 31, 0, 0, 0, "+04:00"), sender: 'test@example.com'}}
+  let(:valid_options){options = {name: 'batch_name', send_time: Time.new(2013, 12, 31, 0, 0, 0, "-08:00"), sender: 'test@example.com'}}
   let(:batch_builder){batch_builder = Emarsys::Broadcast::BatchBuilder.new(valid_options)}
   describe 'initialize' do
     context 'with valid options' do
