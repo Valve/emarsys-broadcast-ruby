@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Emarsys::Broadcast::BatchBuilder do
-  let(:valid_options){options = {name: 'batch_name', send_time: Time.parse('2013-12-31'), sender: 'test@example.com'}}
+  let(:valid_options){options = {name: 'batch_name', send_time: Time.new(2013, 12, 31, 0, 0, 0, "+04:00"), sender: 'test@example.com'}}
   let(:batch_builder){batch_builder = Emarsys::Broadcast::BatchBuilder.new(valid_options)}
   describe 'initialize' do
     context 'with valid options' do
@@ -66,9 +66,39 @@ describe Emarsys::Broadcast::BatchBuilder do
         expected_xml = File.read(fixture_path)
         expect(actual_xml).to eq expected_xml
       end
+
+      it 'should properly escape the body of the Emarsys Batch XML string' do
+        actual_xml = batch_builder.build('subject', '<h1>hello</h1>').chomp
+        fixture_path = File.dirname(__FILE__) + '/fixtures/minimal_escaped_batch.xml'
+        expected_xml = File.read(fixture_path)
+        expect(actual_xml).to eq expected_xml
+      end
     end
 
     context 'with invalid arguments' do
+      it 'should raise ArgumentError when subject is nil' do
+        expect {
+          batch_builder.build(nil, 'body')
+        }.to raise_error ArgumentError
+      end
+
+      it 'should raise ArgumentError when subject is empty' do
+        expect {
+          batch_builder.build('', 'body')
+        }.to raise_error ArgumentError
+      end
+
+      it 'should raise ArgumentError when body is nil' do
+        expect {
+          batch_builder.build('subject', nil)
+        }.to raise_error ArgumentError
+      end
+
+      it 'should raise ArgumentError when body is empty' do
+        expect {
+          batch_builder.build('subject', '')
+        }.to raise_error ArgumentError
+      end
     end
   end
 end

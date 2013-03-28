@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<batch>
+  <name>batch_name</name>
+  <runDate>2013-12-31T00:00:00+0400</runDate>
+  <properties>
+    <property key="Sender">
+      <text>test@example.com</text>
+    </property>
+    <property key="Language">
+      <text>en</text>
+    </property>
+    <property key="Encoding">
+      <text>UTF-8</text>
+    </property>
+    <property key="Domain">
+      <text>e3.emarsys.net</text>
+    </property>
+  </properties>
+  <subject>subject</subject>
+  <html>&lt;h1&gt;hello&lt;/h1&gt;</html>
+</batch>

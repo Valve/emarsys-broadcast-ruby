@@ -12,15 +12,17 @@ module Emarsys
       end
 
       def build(subject, body)
+        raise ArgumentError, 'subject is required' if subject.nil? || subject.empty?
+        raise ArgumentError, 'body is required' if body.nil? || body.empty?
         builder = Nokogiri::XML::Builder.new do |xml|
           xml.batch {
             xml.name @name
             xml.runDate format_time(@send_time)
             xml.properties {
-              xml.property("key" => "Sender") { xml.text! @sender }
-              xml.property("key" => "Language") { xml.text! "en" }
-              xml.property("key" => "Encoding") { xml.text! "UTF-8" }
-              xml.property("key" => "Domain") { xml.text! "e3.emarsys.net" }
+              xml.property(key: :Sender) { xml.text! @sender }
+              xml.property(key: :Language) { xml.text! 'en' }
+              xml.property(key: :Encoding) { xml.text! 'UTF-8' }
+              xml.property(key: :Domain) { xml.text! 'e3.emarsys.net' }
             }
             xml.subject subject
             xml.html body
