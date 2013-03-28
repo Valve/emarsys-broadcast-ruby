@@ -2,6 +2,8 @@ require 'net/sftp'
 module Emarsys
   module Broadcast
     class SFTP
+      include Validation
+      
       def initialize(config)
         validate_config config
         @config = config
@@ -16,11 +18,10 @@ module Emarsys
       private
 
       def validate_config(config)
-        raise ConfigurationError, 'sftp_host must be configured' if config.sftp_host.nil? || config.sftp_host.empty?
-        raise ConfigurationError, 'sftp_user must be configured' if config.sftp_user.nil? || config.sftp_user.empty?
-        raise ConfigurationError, 'sftp_password must be configured' if config.sftp_password.nil? || config.sftp_password.empty?
-        raise ConfigurationError, 'sftp_port must be present' unless config.sftp_port
-        if (!config.sftp_port.is_a?(Integer) || !((1..65535).include? config.sftp_port))
+        raise ConfigurationError, 'sftp_host must be configured' unless string_present? config.sftp_host
+        raise ConfigurationError, 'sftp_user must be configured' unless string_present? config.sftp_user
+        raise ConfigurationError, 'sftp_password must be configured' unless string_present? config.sftp_password
+        unless within_range? config.sftp_port, 1..65535
           raise ConfigurationError, 'sftp_port must be integer between 1 and 65535' 
         end
       end
