@@ -4,10 +4,20 @@ module Emarsys
 
 
     class Configuration
-      attr_accessor :sftp_host, :sftp_user, :sftp_password, :sftp_port
+      attr_accessor \
+        :sftp_host, 
+        :sftp_user, 
+        :sftp_password, 
+        :sftp_port,
+        :http_host, 
+        :http_user, 
+        :http_password, 
+        :http_port
 
       def initialize
         @sftp_port = 22
+        @http_host = 'e3.emarsys.net'
+        @http_port = 80
       end
     end
 
