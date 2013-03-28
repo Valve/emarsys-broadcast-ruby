@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>RSpec results</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <style type="text/css">
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-size: 80%;
+  }
+  </style>
+  <script type="text/javascript">
+    // <![CDATA[
+
+function addClass(element_id, classname) {
+  document.getElementById(element_id).className += (" " + classname);
+}
+
+function removeClass(element_id, classname) {
+  var elem = document.getElementById(element_id);
+  var classlist = elem.className.replace(classname,'');
+  elem.className = classlist;
+}
+
+function moveProgressBar(percentDone) {
+  document.getElementById("rspec-header").style.width = percentDone +"%";
+}
+
+function makeRed(element_id) {
+  removeClass(element_id, 'passed');
+  removeClass(element_id, 'not_implemented');
+  addClass(element_id,'failed');
+}
+
+function makeYellow(element_id) {
+  var elem = document.getElementById(element_id);
+  if (elem.className.indexOf("failed") == -1) {  // class doesn't includes failed
+    if (elem.className.indexOf("not_implemented") == -1) { // class doesn't include not_implemented
+      removeClass(element_id, 'passed');
+      addClass(element_id,'not_implemented');
+    }
+  }
+}
+
+function apply_filters() {
+  var passed_filter = document.getElementById('passed_checkbox').checked;
+  var failed_filter = document.getElementById('failed_checkbox').checked;
+  var pending_filter = document.getElementById('pending_checkbox').checked;
+
+  assign_display_style("example passed", passed_filter);
+  assign_display_style("example failed", failed_filter);
+  assign_display_style("example not_implemented", pending_filter);
+
+  assign_display_style_for_group("example_group passed", passed_filter);
+  assign_display_style_for_group("example_group not_implemented", pending_filter, pending_filter || passed_filter);
+  assign_display_style_for_group("example_group failed", failed_filter, failed_filter || pending_filter || passed_filter);
+}
+
+function get_display_style(display_flag) {
+  var style_mode = 'none';
+  if (display_flag == true) {
+    style_mode = 'block';
+  }
+  return style_mode;
+}
+
+function assign_display_style(classname, display_flag) {
+  var style_mode = get_display_style(display_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    elems[i].style.display = style_mode;
+  }
+}
+
+function assign_display_style_for_group(classname, display_flag, subgroup_flag) {
+  var display_style_mode = get_display_style(display_flag);
+  var subgroup_style_mode = get_display_style(subgroup_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    var style_mode = display_style_mode;
+    if ((display_flag != subgroup_flag) && (elems[i].getElementsByTagName('dt')[0].innerHTML.indexOf(", ") != -1)) {
+      elems[i].style.display = subgroup_style_mode;
+    } else {
+      elems[i].style.display = display_style_mode;
+    }
+  }
+}
+
+    // ]]>
+  </script>
+  <style type="text/css">
+#rspec-header {
+  background: #65C400; color: #fff; height: 4em;
+}
+
+.rspec-report h1 {
+  margin: 0px 10px 0px 10px;
+  padding: 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  font-size: 1.8em;
+  position: absolute;
+}
+
+#label {
+  float:left;
+}
+
+#display-filters {
+  float:left;
+  padding: 28px 0 0 40%;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+}
+
+#summary {
+  float:right;
+  padding: 5px 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  text-align: right;
+}
+
+#summary p {
+  margin: 0 0 0 2px;
+}
+
+#summary #totals {
+  font-size: 1.2em;
+}
+
+.example_group {
+  margin: 0 10px 5px;
+  background: #fff;
+}
+
+dl {
+  margin: 0; padding: 0 0 5px;
+  font: normal 11px "Lucida Grande", Helvetica, sans-serif;
+}
+
+dt {
+  padding: 3px;
+  background: #65C400;
+  color: #fff;
+  font-weight: bold;
+}
+
+dd {
+  margin: 5px 0 5px 5px;
+  padding: 3px 3px 3px 18px;
+}
+
+dd .duration {
+  padding-left: 5px;
+  text-align: right;
+  right: 0px;
+  float:right;
+}
+
+dd.example.passed {
+  border-left: 5px solid #65C400;
+  border-bottom: 1px solid #65C400;
+  background: #DBFFB4; color: #3D7700;
+}
+
+dd.example.not_implemented {
+  border-left: 5px solid #FAF834;
+  border-bottom: 1px solid #FAF834;
+  background: #FCFB98; color: #131313;
+}
+
+dd.example.pending_fixed {
+  border-left: 5px solid #0000C2;
+  border-bottom: 1px solid #0000C2;
+  color: #0000C2; background: #D3FBFF;
+}
+
+dd.example.failed {
+  border-left: 5px solid #C20000;
+  border-bottom: 1px solid #C20000;
+  color: #C20000; background: #FFFBD3;
+}
+
+
+dt.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+dt.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+dt.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+#rspec-header.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+#rspec-header.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+#rspec-header.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+.backtrace {
+  color: #000;
+  font-size: 12px;
+}
+
+a {
+  color: #BE5C00;
+}
+
+/* Ruby code, style similar to vibrant ink */
+.ruby {
+  font-size: 12px;
+  font-family: monospace;
+  color: white;
+  background-color: black;
+  padding: 0.1em 0 0.2em 0;
+}
+
+.ruby .keyword { color: #FF6600; }
+.ruby .constant { color: #339999; }
+.ruby .attribute { color: white; }
+.ruby .global { color: white; }
+.ruby .module { color: white; }
+.ruby .class { color: white; }
+.ruby .string { color: #66FF00; }
+.ruby .ident { color: white; }
+.ruby .method { color: #FFCC00; }
+.ruby .number { color: white; }
+.ruby .char { color: white; }
+.ruby .comment { color: #9933CC; }
+.ruby .symbol { color: white; }
+.ruby .regex { color: #44B4CC; }
+.ruby .punct { color: white; }
+.ruby .escape { color: white; }
+.ruby .interp { color: white; }
+.ruby .expr { color: white; }
+
+.ruby .offending { background-color: gray; }
+.ruby .linenum {
+  width: 75px;
+  padding: 0.1em 1em 0.2em 0;
+  color: #000000;
+  background-color: #FFFBD3;
+}
+
+  </style>
+</head>
+<body>
+<div class="rspec-report">
+
+<div id="rspec-header">
+  <div id="label">
+    <h1>RSpec Code Examples</h1>
+  </div>
+
+  <div id="display-filters">
+    <input id="passed_checkbox" name="passed_checkbox" type="checkbox" checked onchange="apply_filters()" value="1"> <label for="passed_checkbox">Passed</label>
+    <input id="failed_checkbox" name="failed_checkbox" type="checkbox" checked onchange="apply_filters()" value="2"> <label for="failed_checkbox">Failed</label>
+    <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked onchange="apply_filters()" value="3"> <label for="pending_checkbox">Pending</label>
+  </div>
+
+  <div id="summary">
+    <p id="totals">&nbsp;</p>
+    <p id="duration">&nbsp;</p>
+  </div>
+</div>
+
+
+<div class="results">
+<div id="div_group_1" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_1" class="passed">Emarsys::Broadcast::API</dt>
+  </dl>
+</div>
+<div id="div_group_2" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_2" class="passed">initialize</dt>
+  </dl>
+</div>
+<div id="div_group_3" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_3" class="passed">when configured properly</dt>
+    <script type="text/javascript">moveProgressBar('1.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should initialize a new instance of API</span><span class='duration'>0.00236s</span></dd>
+  </dl>
+</div>
+<div id="div_group_4" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_4" class="passed">Emarsys::Broadcast::BatchBuilder</dt>
+  </dl>
+</div>
+<div id="div_group_5" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_5" class="passed">initialize</dt>
+  </dl>
+</div>
+<div id="div_group_6" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_6" class="passed">with valid options</dt>
+    <script type="text/javascript">moveProgressBar('3.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should create a new instance of BatchBuilder from valid options</span><span class='duration'>0.00016s</span></dd>
+    <script type="text/javascript">moveProgressBar('5.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">should init attributes from required option keys</span><span class='duration'>0.00070s</span></dd>
+  </dl>
+</div>
+<div id="div_group_7" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_7" class="passed">with invalid options</dt>
+    <script type="text/javascript">moveProgressBar('6.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when options is nil</span><span class='duration'>0.00115s</span></dd>
+    <script type="text/javascript">moveProgressBar('8.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when options does not contain a valid name</span><span class='duration'>0.00021s</span></dd>
+    <script type="text/javascript">moveProgressBar('10.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when options does not contain a valid send_time</span><span class='duration'>0.00015s</span></dd>
+    <script type="text/javascript">moveProgressBar('11.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when options does not contain a sender</span><span class='duration'>0.00015s</span></dd>
+    <script type="text/javascript">moveProgressBar('13.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when options contains empty sender</span><span class='duration'>0.00015s</span></dd>
+    <script type="text/javascript">moveProgressBar('15.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when options contains invalid sender email</span><span class='duration'>0.00016s</span></dd>
+  </dl>
+</div>
+<div id="div_group_8" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_8" class="passed">#build</dt>
+  </dl>
+</div>
+<div id="div_group_9" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_9" class="passed">with valid arguments</dt>
+    <script type="text/javascript">moveProgressBar('16.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return a valid Emarsys Batch XML string</span><span class='duration'>0.00132s</span></dd>
+    <script type="text/javascript">moveProgressBar('18.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should properly escape the body of the Emarsys Batch XML string</span><span class='duration'>0.00067s</span></dd>
+  </dl>
+</div>
+<div id="div_group_10" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_10" class="passed">with invalid arguments</dt>
+    <script type="text/javascript">moveProgressBar('20.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when subject is nil</span><span class='duration'>0.00019s</span></dd>
+    <script type="text/javascript">moveProgressBar('22.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when subject is empty</span><span class='duration'>0.00018s</span></dd>
+    <script type="text/javascript">moveProgressBar('23.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when body is nil</span><span class='duration'>0.00017s</span></dd>
+    <script type="text/javascript">moveProgressBar('25.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError when body is empty</span><span class='duration'>0.00017s</span></dd>
+  </dl>
+</div>
+<div id="div_group_11" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_11" class="passed">Emarsys::Broadcast::Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_12" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_12" class="passed">configure</dt>
+    <script type="text/javascript">moveProgressBar('27.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return instance of configuration when configured</span><span class='duration'>0.00067s</span></dd>
+  </dl>
+</div>
+<div id="div_group_13" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_13" class="passed">when sftp_host is set</dt>
+    <script type="text/javascript">moveProgressBar('28.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">returns sftp_host</span><span class='duration'>0.00011s</span></dd>
+  </dl>
+</div>
+<div id="div_group_14" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_14" class="passed">when sftp_host is not set</dt>
+    <script type="text/javascript">moveProgressBar('30.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">defaults to nil</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_15" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_15" class="passed">when sftp_user is set</dt>
+    <script type="text/javascript">moveProgressBar('32.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">returns sftp_user</span><span class='duration'>0.00011s</span></dd>
+  </dl>
+</div>
+<div id="div_group_16" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_16" class="passed">when sftp_user is not set</dt>
+    <script type="text/javascript">moveProgressBar('33.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">defaults to nil</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_17" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_17" class="passed">when sftp_password is set</dt>
+    <script type="text/javascript">moveProgressBar('35.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">returns sftp_password</span><span class='duration'>0.00011s</span></dd>
+  </dl>
+</div>
+<div id="div_group_18" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_18" class="passed">when sftp_password is not set</dt>
+    <script type="text/javascript">moveProgressBar('37.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">defaults to nil</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_19" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_19" class="passed">when sftp_port is set</dt>
+    <script type="text/javascript">moveProgressBar('38.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">returns sftp_port</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_20" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_20" class="passed">when sftp_port is not set</dt>
+    <script type="text/javascript">moveProgressBar('40.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">defaults to 22</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_21" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_21" class="passed">when http_host is set</dt>
+    <script type="text/javascript">moveProgressBar('42.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">returns http_host</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_22" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_22" class="passed">when http_host is not set</dt>
+    <script type="text/javascript">moveProgressBar('44.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">defaults to e3.emarsys.net</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_23" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_23" class="passed">when http_user is set</dt>
+    <script type="text/javascript">moveProgressBar('45.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">returns http_user</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_24" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_24" class="passed">when http_user is not set</dt>
+    <script type="text/javascript">moveProgressBar('47.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">defaults to nil</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_25" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_25" class="passed">when http_password is set</dt>
+    <script type="text/javascript">moveProgressBar('49.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">returns http_password</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_26" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_26" class="passed">when http_password is not set</dt>
+    <script type="text/javascript">moveProgressBar('50.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">defaults to nil</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_27" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_27" class="passed">when http_port is set</dt>
+    <script type="text/javascript">moveProgressBar('52.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">returns http_port</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_28" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_28" class="passed">when http_port is not set</dt>
+    <script type="text/javascript">moveProgressBar('54.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">defaults to 80</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_29" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_29" class="passed">Emarsys::Broadcast::Email</dt>
+    <script type="text/javascript">moveProgressBar('55.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">should validate valid email</span><span class='duration'>0.00009s</span></dd>
+    <script type="text/javascript">moveProgressBar('57.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should not validate invalid email</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_30" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_30" class="passed">Emarsys::Broadcast::HTTP</dt>
+  </dl>
+</div>
+<div id="div_group_31" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_31" class="passed">initialize</dt>
+    <script type="text/javascript">moveProgressBar('59.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should create a new instance of HTTP from valid configuration</span><span class='duration'>0.00012s</span></dd>
+  </dl>
+</div>
+<div id="div_group_32" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_32" class="passed">invalid http configuration</dt>
+    <script type="text/javascript">moveProgressBar('61.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when no http_user is configured</span><span class='duration'>0.00018s</span></dd>
+    <script type="text/javascript">moveProgressBar('62.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when no http_password is configured</span><span class='duration'>0.00017s</span></dd>
+    <script type="text/javascript">moveProgressBar('64.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when http_port is nil</span><span class='duration'>0.00021s</span></dd>
+    <script type="text/javascript">moveProgressBar('66.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when http_port is not Integer</span><span class='duration'>0.00020s</span></dd>
+    <script type="text/javascript">moveProgressBar('67.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when  http_port is outside the valid range (1..65536)</span><span class='duration'>0.00016s</span></dd>
+  </dl>
+</div>
+<div id="div_group_33" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_33" class="passed">Emarsys::Broadcast::SFTP</dt>
+  </dl>
+</div>
+<div id="div_group_34" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_34" class="passed">initialize</dt>
+    <script type="text/javascript">moveProgressBar('69.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should create a new instance of SFTP from valid configuration</span><span class='duration'>0.00011s</span></dd>
+  </dl>
+</div>
+<div id="div_group_35" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_35" class="passed">invalid sftp configuration</dt>
+    <script type="text/javascript">moveProgressBar('71.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when no sftp_host is configured</span><span class='duration'>0.00018s</span></dd>
+    <script type="text/javascript">moveProgressBar('72.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when no sftp_user is configured</span><span class='duration'>0.00016s</span></dd>
+    <script type="text/javascript">moveProgressBar('74.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when no sftp_password is configured</span><span class='duration'>0.00015s</span></dd>
+    <script type="text/javascript">moveProgressBar('76.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when sftp_port is nil</span><span class='duration'>0.00020s</span></dd>
+    <script type="text/javascript">moveProgressBar('77.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when sftp_port is not Integer</span><span class='duration'>0.00020s</span></dd>
+    <script type="text/javascript">moveProgressBar('79.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ConfigurationError when  sftp_port is outside the valid range (1..65536)</span><span class='duration'>0.00016s</span></dd>
+  </dl>
+</div>
+<div id="div_group_36" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_36" class="passed">initialized</dt>
+  </dl>
+</div>
+<div id="div_group_37" class="example_group passed">
+  <dl style="margin-left: 30px;">
+  <dt id="example_group_37" class="passed">#upload_file</dt>
+    <script type="text/javascript">moveProgressBar('81.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should call Net::SFTP.start with sftp configuration values</span><span class='duration'>0.00039s</span></dd>
+    <script type="text/javascript">moveProgressBar('83.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">should take an instance of SFTP as a block argument and call #upload! on it with file paths</span><span class='duration'>0.00048s</span></dd>
+  </dl>
+</div>
+<div id="div_group_38" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_38" class="passed">Emarsys::Broadcast::Validation</dt>
+  </dl>
+</div>
+<div id="div_group_39" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_39" class="passed">#string_present?</dt>
+    <script type="text/javascript">moveProgressBar('84.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return true if string not nil or empty</span><span class='duration'>0.00011s</span></dd>
+    <script type="text/javascript">moveProgressBar('86.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return false if string is nil</span><span class='duration'>0.00009s</span></dd>
+    <script type="text/javascript">moveProgressBar('88.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return false if string is empty</span><span class='duration'>0.00009s</span></dd>
+    <script type="text/javascript">moveProgressBar('89.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return false if string is all spaces</span><span class='duration'>0.00009s</span></dd>
+  </dl>
+</div>
+<div id="div_group_40" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_40" class="passed">#within_range?</dt>
+    <script type="text/javascript">moveProgressBar('91.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return true if integer is within range</span><span class='duration'>0.00009s</span></dd>
+    <script type="text/javascript">moveProgressBar('93.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return false if integer is not within range</span><span class='duration'>0.00009s</span></dd>
+    <script type="text/javascript">moveProgressBar('94.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return false if integer is nil</span><span class='duration'>0.00013s</span></dd>
+    <script type="text/javascript">moveProgressBar('96.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError is range is nil</span><span class='duration'>0.00014s</span></dd>
+    <script type="text/javascript">moveProgressBar('98.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">should raise ArgumentError is range is not a Range</span><span class='duration'>0.00013s</span></dd>
+  </dl>
+</div>
+<div id="div_group_41" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_41" class="passed">0.0.1</dt>
+    <script type="text/javascript">moveProgressBar('100.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">should return version</span><span class='duration'>0.00008s</span></dd>
+  </dl>
+</div>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.02371 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "59 examples, 0 failures";</script>
+</div>
+</div>
+</body>
+</html>

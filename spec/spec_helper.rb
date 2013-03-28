@@ -1,8 +1,4 @@
-require 'coveralls'
-Coveralls.wear!
-
 require 'bundler/setup'
-
 require 'emarsys/broadcast'
 
 def restore_default_config
