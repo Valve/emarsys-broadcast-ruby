@@ -17,6 +17,10 @@ describe Emarsys::Broadcast::HTTP do
     end
 
     context 'invalid http configuration' do
+      
+      it 'should raise ConfigurationError when config is nil (was never configured)' do
+        expect{Emarsys::Broadcast::SFTP.new(nil)}.to raise_error Emarsys::Broadcast::ConfigurationError
+      end
 
       it 'should raise ConfigurationError when no http_user is configured' do
         config = Emarsys::Broadcast::configure do |c|

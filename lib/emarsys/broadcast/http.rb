@@ -11,6 +11,7 @@ module Emarsys
       private
 
       def validate_config(config)
+        raise ConfigurationError, 'configuration is nil, did you forget to configure the gem?' unless config
         raise ConfigurationError, 'http_host must be configured' unless string_present? config.http_host
         raise ConfigurationError, 'http_user must be configured' unless string_present? config.http_user
         raise ConfigurationError, 'http_password must be configured' unless string_present? config.http_password

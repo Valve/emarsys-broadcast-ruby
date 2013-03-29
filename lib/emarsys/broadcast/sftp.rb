@@ -18,6 +18,7 @@ module Emarsys
       private
 
       def validate_config(config)
+        raise ConfigurationError, 'configuration is nil, did you forget to configure the gem?' unless config
         raise ConfigurationError, 'sftp_host must be configured' unless string_present? config.sftp_host
         raise ConfigurationError, 'sftp_user must be configured' unless string_present? config.sftp_user
         raise ConfigurationError, 'sftp_password must be configured' unless string_present? config.sftp_password

@@ -17,6 +17,10 @@ describe Emarsys::Broadcast::SFTP do
     end
 
     context 'invalid sftp configuration' do
+      it 'should raise ConfigurationError when config is nil (was never configured)' do
+        expect{Emarsys::Broadcast::SFTP.new(nil)}.to raise_error Emarsys::Broadcast::ConfigurationError
+      end
+      
       it 'should raise ConfigurationError when no sftp_host is configured' do
         config = Emarsys::Broadcast::configure do |c|
           c.sftp_user = 'user'
