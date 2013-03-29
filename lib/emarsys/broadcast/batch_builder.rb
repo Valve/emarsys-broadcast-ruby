@@ -2,6 +2,8 @@ require 'nokogiri'
 module Emarsys
   module Broadcast
     class BatchBuilder
+      include Validation
+
       attr_accessor :name, :send_time, :sender
 
       def initialize(options)
@@ -35,10 +37,10 @@ module Emarsys
       private 
 
       def validate_options(options)
-        raise ArgumentError, 'options can not be nil' if options.nil?
-        raise ArgumentError, 'name is required' if (options[:name].nil? || options[:name].empty?)
-        raise ArgumentError, 'send_time is required' if (options[:send_time].nil?)
-        raise ArgumentError, 'sender is required' if (options[:sender].nil? || options[:sender].empty?)
+        raise ArgumentError, 'options can not be nil' unless options
+        raise ArgumentError, 'name is required' unless string_present? options[:name]
+        raise ArgumentError, 'send_time is required' if options[:send_time].nil?
+        raise ArgumentError, 'sender is required' unless string_present? options[:sender]
         raise ArgumentError, 'sender must be valid email' unless Email::validate options[:sender]
       end
 

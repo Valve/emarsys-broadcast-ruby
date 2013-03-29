@@ -5,6 +5,7 @@ require 'emarsys/broadcast/configuration'
 require 'emarsys/broadcast/sftp'
 require 'emarsys/broadcast/http'
 require 'emarsys/broadcast/batch_builder'
+require 'emarsys/broadcast/xml_builder'
 require 'emarsys/broadcast/api'
 
 module Emarsys
