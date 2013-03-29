@@ -2,19 +2,20 @@ require 'spec_helper'
 require 'httpclient'
 
 describe Emarsys::Broadcast::HTTP do
+  let(:config){create_valid_config}
+  let(:http){Emarsys::Broadcast::HTTP.new config}
 
   describe 'initialize' do
     after(:each){restore_default_config}
     it 'should create a new instance of HTTP from valid configuration' do
-      config = Emarsys::Broadcast::configure do |c|
-        c.http_host = 'localhost'
-        c.http_user = 'user'
-        c.http_password = 'password'
-      end
-
-      http = Emarsys::Broadcast::HTTP.new config
       expect(http).not_to be_nil
     end
+
+    it 'should instantiate a new instance of HttpClient' do
+      HTTPClient.should_receive(:new)
+      Emarsys::Broadcast::HTTP.new config
+    end
+
 
     context 'invalid http configuration' do
       
@@ -70,31 +71,57 @@ describe Emarsys::Broadcast::HTTP do
     end
   end
 
-  # context 'initialized' do
-  #   let(:config) do
-  #     config = Emarsys::Broadcast::configure do |c|
-  #       c.http_host = 'host'
-  #       c.http_user = 'user'
-  #       c.http_password = 'password'
-  #     end
-  #   end
+  describe '#post' do
 
-  #   let(:http) do
-  #     Emarsys::Broadcast::HTTP.new config
-  #   end
+    context 'invalid arguments' do
 
-  #   describe '#upload_file' do
-  #     it 'should call Net::HTTP.start with http configuration values' do
-  #       Net::HTTP.should_receive(:start).with(config.http_host, config.http_user, password: config.http_password)
-  #       http.upload_file('local_file', 'remote_file')
-  #     end
+      it 'should raise ArgumentError if url is nil' do
+        expect {
+          http.post(nil, '<xml/>')
+        }.to raise_error ArgumentError
+      end
 
-  #     it 'should take an instance of HTTP as a block argument and call #upload! on it with file paths' do
-  #       mock_session = mock('session')
-  #       Net::HTTP.stub(:start).and_yield mock_session
-  #       mock_session.should_receive(:upload!).with('local_file', 'remote_file')
-  #       http.upload_file('local_file', 'remote_file')
-  #     end
-  #   end
-  # end
+      it 'should raise ArgumentError if url is empty' do
+        expect {
+          http.post('', '<xml/>')
+        }.to raise_error ArgumentError
+      end
+
+      it 'should raise ArgumentError if url is all spaces' do
+        expect {
+          http.post('  ', '<xml/>')
+        }.to raise_error ArgumentError
+      end
+
+      it 'should raise ArgumentError if xml is nil' do
+        expect {
+          http.post('/path', nil)
+        }.to raise_error ArgumentError
+      end
+
+      it 'should raise ArgumentError if xml is empty' do
+        expect {
+          http.post('/path', '')
+        }.to raise_error ArgumentError
+      end
+
+      it 'should raise ArgumentError if xml is all spaces' do
+        expect {
+          http.post('/path', '    ')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'valid arguments' do
+      it 'should call HTTPClient#post with valid arguments' do
+        path = 'path'
+        xml = '<xml/>'
+        url = config.http_host + path
+        client = http.instance_variable_get(:@client)
+        client.should_receive(:set_basic_auth).with(url, config.http_user, config.http_password)
+        client.should_receive(:post).with(url, xml, 'Content-Type' => 'application/xml')
+        http.post(path, xml)
+      end
+    end
+  end
 end

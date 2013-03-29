@@ -30,4 +30,12 @@ describe Emarsys::Broadcast::XmlBuilder do
       end
     end
   end
+
+  describe '#import_xml' do
+    it 'should return import_xml for API call' do
+      fixture_path = File.dirname(__FILE__) + '/fixtures/xml_builder_import.xml'
+      expected_xml = File.read(fixture_path)
+      expect(xml_builder.import_xml.chomp).to eq expected_xml
+    end
+  end
 end
