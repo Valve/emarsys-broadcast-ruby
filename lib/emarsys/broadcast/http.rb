@@ -13,9 +13,14 @@ module Emarsys
         request(path, xml, :post)
       end
 
+      def put(path, xml)
+        request(path, xml, :put)
+      end
+
       def get(path)
         request(path, nil, :get)
       end
+
 
       private
 
@@ -29,6 +34,8 @@ module Emarsys
           case method.downcase.to_sym
           when :post
             req = Net::HTTP::Post.new(path)
+          when :put
+            req = Net::HTTP::Put.new(path)
           when :get
             req = Net::HTTP::Get.new(path)
           end

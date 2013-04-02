@@ -13,6 +13,16 @@ module Emarsys
         xml.to_xml
       end
 
+      def sender_xml(sender)
+        xml = Nokogiri::XML::Builder.new do |xml|
+          xml.sender {
+            xml.name sender.name
+            xml.address sender.address
+          }
+        end
+        xml.to_xml
+      end
+
       private 
 
       def validate_options(options)

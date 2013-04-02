@@ -8,7 +8,8 @@ module Emarsys
         :recipients_path,
         :send_time,
         :sender,
-        :sender_domain
+        :sender_domain,
+        :sender_id
 
     end
   end
