@@ -17,7 +17,8 @@ module Emarsys
               xml.property(key: :Domain){xml.text batch.sender_domain}
             }
             xml.subject batch.subject
-            xml.html batch.body
+            xml.html batch.body_html
+            xml.text batch.body_text
           }
         end 
         builder.to_xml  

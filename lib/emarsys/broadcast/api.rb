@@ -11,6 +11,7 @@ module Emarsys
 
       def send_batch(batch)
         batch = supplement_batch_from_config(batch)
+        validate_batch(batch)
         validate_sender(batch.sender)
         create_batch(batch)
         upload_recipients(batch.recipients_path)
@@ -63,9 +64,13 @@ module Emarsys
         batch
       end
 
+      def validate_batch(batch)
+        raise ValidationError.new('Batch is invalid', batch.errors.full_messages) unless batch.valid?
+      end
+
       def validate_sender(email)
         msg = 'This email is not registered with Emarsys as a sender, register it with `create_sender` api call'
-        raise ApiError, msg unless sender_exists? email 
+        raise ValidationError, msg, [msg] unless sender_exists? email 
       end
     end
     class ApiError < StandardError; end
