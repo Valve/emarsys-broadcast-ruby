@@ -35,9 +35,23 @@ end
 
 def create_minimal_batch
   batch = Emarsys::Broadcast::Batch.new
-  batch.name="test_batch_#{Time.now.to_i}"
-  batch.subject = 'די שטאַט פון ישראל'
-  batch.body_html = '<h1>די שטאט ווערט שוין דערמאנט אין תנ"ך. לויט געוויסע איז אליעזר (עבד אברהם) פון דמשק. דוד המלך, האט מלחמה געהאלטן און איינגענומען דמשק. און שפעטער מלכי ישראל. דאס איז שוין 3,000 יאר צוריק.<i>!</i></h1>'
+  batch.name="batch_name"
+  batch.subject = 'subject'
+  batch.body_html = 'body'
+  batch.send_time = spec_time
+  batch.sender_id = 'sender_id'
+  batch.sender_domain = 'e3.emarsys.net'
+  batch
+end
+
+def create_minimal_html_batch
+  batch = Emarsys::Broadcast::Batch.new
+  batch.name="batch_name"
+  batch.subject = 'subject'
+  batch.body_html = '<h1>hello</h1>'
+  batch.send_time = spec_time
+  batch.sender_id = 'sender_id'
+  batch.sender_domain = 'e3.emarsys.net'
   batch
 end
 

@@ -1,21 +1,2 @@
 <?xml version="1.0"?>
-<batch>
-  <name>batch_name</name>
-  <runDate>2013-12-31T00:00:00-0800</runDate>
-  <properties>
-    <property key="Sender">
-      <text>test@example.com</text>
-    </property>
-    <property key="Language">
-      <text>en</text>
-    </property>
-    <property key="Encoding">
-      <text>UTF-8</text>
-    </property>
-    <property key="Domain">
-      <text>e3.emarsys.net</text>
-    </property>
-  </properties>
-  <subject>subject</subject>
-  <html>body</html>
-</batch>
+<batch><name>batch_name</name><runDate>2013-12-31T00:00:00-0800</runDate><properties><property key="Sender">sender_id</property><property key="Language">en</property><property key="Encoding">UTF-8</property><property key="Domain">e3.emarsys.net</property></properties><subject>subject</subject><html>body</html></batch>

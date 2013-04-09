@@ -2,7 +2,6 @@ require 'nokogiri'
 module Emarsys
   module Broadcast
     class BatchXmlBuilder
-      include Validation
 
       def build(batch)
         raise ArgumentError, 'batch is required' unless batch
@@ -21,7 +20,7 @@ module Emarsys
             xml.text batch.body_text
           }
         end 
-        builder.to_xml  
+        builder.to_xml
       end
 
 
