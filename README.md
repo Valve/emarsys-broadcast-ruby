@@ -93,9 +93,9 @@ batch = Emarsys::Broadcast::Batch.new name: 'name', subject: 'subject', body_htm
 
 ### Batch name requirements
 
-Batch name must be a valid identifier, i.e. start with a letter and contain letters, digits and underscores
-Emarsys requires every batch have a unique name, but you don't have to maintain the uniqueness, because
-this library internally appends a timestamp to each batch name before submitting it to Emarsys
+Batch name must be a valid identifier, i.e. start with a letter and contain letters, digits and underscores.
+Emarsys requires every batch to have a unique name, but you don't have to maintain the uniqueness, because
+this library internally appends a timestamp to each batch name before submitting it to Emarsys.
 
 ### Batch subject requirements
 
@@ -137,7 +137,6 @@ You can always validate your batch before submitting it.
 Note that calling api#send_batch on an invalid batch will throw ValidationException
 
 ```ruby
-
 batch = get_invalid_batch
 api = Emarsys::Broadcast::API.new
 begin
@@ -145,11 +144,99 @@ begin
 rescue Emarsys::Broadcast::ValidationException => ex
   # get exception message
   puts ex.message
-
   # get exception errors (ActiveModel compatible)
   puts ex.errors
 end
 ```
+
+### CSV file requirements
+
+The recipients must be placed in a `UTF-8` CSV file.
+The file must have at least one column with `EMAIL` header, for example:
+
+```csv
+EMAIL
+john.doe@gmail.com
+sara.parker@yahoo.com
+...
+...
+```
+
+If you use additional customization columns, add them to your CSV file:
+
+```csv
+EMAIL FIRST_NAME
+john.doe@gmail.com John
+sara.parker@yahoo.com Sara
+...
+...
+```
+Having additional columns allows you to customize your body_html, for example:
+
+```html
+<h1>Hi, $$FIRST_NAME$$</h1>
+```
+
+### Batch sender_id requirements
+
+Emarsys requires that API users maintain a list of possible senders, and restricts
+sending emails from arbitrary sender.
+
+To use any `sender_id` in your batch, create it first:
+
+```ruby 
+# assuming you have API configured already
+api = Emarsys::Broadcast::API.new
+# sender requires 3 arguments: id, name, email_address
+sender = Emarsys::Broadcast::Sender.new('primary_newsletter_sender', 'My company', 'news@company.com')
+api.create_sender sender
+```
+
+Once you upload a sender, you can use its ID in any batch:
+
+```ruby
+batch.sender_id = 'primary_newsletter_sender'
+# more attributes
+```
+
+### Working with senders
+
+#### Getting a full list of senders
+
+```ruby
+api.get_senders 
+# returns Sender array
+```
+
+#### Getting a single sender by email
+
+```ruby 
+api.get_sender('news@mycompany.ru')
+```
+
+#### Find if a sender exists by email
+
+```ruby
+api.sender_exists? 'news@mycompany.ru'
+```
+
+### Scheduling batches
+
+By default a new batch is scheduled for immediate sending, but you can set the `send_time`
+
+# Assuming using ActiveSupport and want to schedule a batch to be sent in 10 days
+batch.send_time = Time.zone.now + 10.days
+# .. more attributes
+
+api.send_batch batch
+
+
+### Further plans
+
+This library does not yet cover all Emarsys functionality, so the plans are to cover 100% of Emarsys features,
+add async support, more scheduling options etc. 
+
+If you want to help me with this, pull requests are especially welcome :)
 
 
 ## Contributing
