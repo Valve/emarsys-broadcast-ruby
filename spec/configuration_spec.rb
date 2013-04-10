@@ -30,8 +30,8 @@ describe Emarsys::Broadcast::Configuration do
         Emarsys::Broadcast::configure {}
       end
 
-      it 'defaults to nil' do
-        expect(Emarsys::Broadcast.configuration.sftp_host).to be_nil
+      it 'defaults to e3.emarsys.net' do
+        expect(Emarsys::Broadcast.configuration.sftp_host).to eq 'e3.emarsys.net'
       end
     end
 

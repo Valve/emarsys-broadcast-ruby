@@ -21,6 +21,7 @@ module Emarsys
 
 
       def initialize
+        @sftp_host = 'e3.emarsys.net'
         @sftp_port = 22
         @api_host = 'e3.emarsys.net'
         @api_base_path = '/bmapi/v2'

@@ -20,14 +20,6 @@ describe Emarsys::Broadcast::SFTP do
       it 'should raise ConfigurationError when config is nil (was never configured)' do
         expect{Emarsys::Broadcast::SFTP.new(nil)}.to raise_error Emarsys::Broadcast::ConfigurationError
       end
-      
-      it 'should raise ConfigurationError when no sftp_host is configured' do
-        config = Emarsys::Broadcast::configure do |c|
-          c.sftp_user = 'user'
-          c.sftp_password = 'password'
-        end
-        expect{Emarsys::Broadcast::SFTP.new(config)}.to raise_error Emarsys::Broadcast::ConfigurationError
-      end
 
       it 'should raise ConfigurationError when no sftp_user is configured' do
         config = Emarsys::Broadcast::configure do |c|
