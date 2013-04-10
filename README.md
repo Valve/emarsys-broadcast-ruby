@@ -232,6 +232,12 @@ batch.send_time = Time.zone.now + 10.days
 api.send_batch batch
 ```
 
+### Compatibility
+
+This gem is tested on
+* MRI `1.9.2`, `1.9.3`, `2.0.0`
+* JRuby 1.9 mode
+
 
 ### Further plans
 
