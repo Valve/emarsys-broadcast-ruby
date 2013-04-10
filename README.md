@@ -57,7 +57,7 @@ This will synchronously send the batch email to all recipients found in CSV file
 
 ### Moving batch properties to configuration
 
-If you find yourself using same batch attributs over and over again, for example `recipients_path`, 
+If you find yourself using same batch attributes over and over again, for example `recipients_path`, 
 you can move those values into configuration:
 
 ```ruby
@@ -224,11 +224,13 @@ api.sender_exists? 'news@mycompany.ru'
 
 By default a new batch is scheduled for immediate sending, but you can set the `send_time`
 
+```ruby
 # Assuming using ActiveSupport and want to schedule a batch to be sent in 10 days
 batch.send_time = Time.zone.now + 10.days
 # .. more attributes
 
 api.send_batch batch
+```
 
 
 ### Further plans
