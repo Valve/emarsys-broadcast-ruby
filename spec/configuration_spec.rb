@@ -189,7 +189,7 @@ describe Emarsys::Broadcast::Configuration do
       end
     end
 
-      describe 'when sender is set' do
+    describe 'when sender is set' do
       before do
         Emarsys::Broadcast::configure do |c|
           c.sender = 'sender'
@@ -209,6 +209,28 @@ describe Emarsys::Broadcast::Configuration do
       it 'defaults to nil' do
         expect(Emarsys::Broadcast.configuration.sender).to be_nil
       end
+    end
+
+    describe 'when import_delay_hours is set' do
+      before do
+        Emarsys::Broadcast::configure do |c|
+          c.import_delay_hours = 12
+        end
+      end
+
+      it 'returns import_delay_hours' do
+        expect(Emarsys::Broadcast.configuration.import_delay_hours).to eq 12
+      end
+    end
+
+    describe 'when import_delay_hours is not set' do
+      before do
+        Emarsys::Broadcast::configure {}
+      end
+
+      it 'defaults to 1 hour' do
+        expect(Emarsys::Broadcast.configuration.import_delay_hours).to eq 1
+      end 
     end
   end
 

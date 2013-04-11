@@ -1,7 +1,5 @@
-# Emarsys::Broadcast
+# Emarsys::Broadcast a ruby wrapper for Emarsys batch mailing API
 
-Ruby wrapper for Emarsys batch mailing API
-==========================================
 [![Build Status](https://travis-ci.org/Valve/emarsys-broadcast-ruby.png)](https://travis-ci.org/Valve/emarsys-broadcast-ruby)
 [![Code Climate](https://codeclimate.com/github/Valve/emarsys-broadcast-ruby.png)](https://codeclimate.com/github/Valve/emarsys-broadcast-ruby)
 
@@ -55,10 +53,74 @@ api.send_batch(batch)
 
 This will synchronously send the batch email to all recipients found in CSV file.
 
+### Creating batch from hash
+
+If you like, you can construct your batch from a hash, like follows:
+
+```ruby
+batch = Emarsys::Broadcast::Batch.new name: 'name', subject: 'subject', body_html: '<h1>html body</h1>'
+```
+
+### Required batch attributes
+
+#### Batch#name
+
+Batch name must be a valid identifier, i.e. start with a letter and contain letters, digits and underscores.
+Emarsys requires every batch to have a unique name, but you don't have to maintain the uniqueness, because
+this library internally appends a timestamp to each batch name before submitting it to Emarsys.
+
+#### Batch#subject
+
+Batch subject must be a string with a maximum length of 255 characters
+
+#### Batch#sender
+
+Valid email, registed with Emarsys.
+
+Emarsys maintains a list of allowed sender emails, and restricts
+sending emails from arbitrary email. If you want to use an email as a 
+sender, refer to 
+
+#### Batch#body_html 
+
+Batch body html can be any HTML text, no restrictions
+
+#### Batch#recipients_path
+
+Absolute path to CSV file with recipients data.
+
+_Can be set once via configuration_
+
+### Optional batch attributes
+
+#### Batch#body_text
+
+It is possible to supply the body contents in plain text, this will broaden compatibility, 
+because some email clients don't support HTML and will download textual version instead.
+
+```ruby
+batch = Emarsys::Broadcast::Batch.new
+batch.name = 'newsletter_2013_06_01'
+batch.subject = 'June 2013 company news'
+batch.body_html = '<h1>Dear 朋友!</h1>'
+batch.body_text = 'Dear 朋友'
+```
+
+#### Batch#send_time
+
+You can set the batch send time using this optional attribute. If you don't set it
+it will be scheduled for immediate sending.
+
+
+#### Batch.import_delay_hours
+
+Time in hours which is allowed for import to be delayed after batch import. Defaults to 1 hour.
+
+
 ### Moving batch properties to configuration
 
-If you find yourself using same batch attributes over and over again, for example `recipients_path`, 
-you can move those values into configuration:
+If you find yourself using same batch attributes over and over again,
+you can move these attributes into configuration:
 
 ```ruby
 Emarsys::Broadcast::configure do |c|
@@ -82,41 +144,13 @@ batch.body_html = '<h1>Dear 朋友!</h1>'
 # send your batch as above, via api
 ```
 
+#### List of configurable attributes
+* sender (required attribute)
+* sender_domain (required attribute)
+* recipients_path (required attribute)
+* import_delay_hours (optional attribute) see more [here](#)
 
-### Creating batch from hash
 
-If you like, you can construct your batch from a hash, like follows:
-
-```ruby
-batch = Emarsys::Broadcast::Batch.new name: 'name', subject: 'subject', body_html: '<h1>html body</h1>'
-```
-
-### Batch name requirements
-
-Batch name must be a valid identifier, i.e. start with a letter and contain letters, digits and underscores.
-Emarsys requires every batch to have a unique name, but you don't have to maintain the uniqueness, because
-this library internally appends a timestamp to each batch name before submitting it to Emarsys.
-
-### Batch subject requirements
-
-Batch subject must be a string with a maximum length of 255 characters
-
-### Batch body html 
-
-Batch body html can be any HTML text, no restrictions
-
-### Batch body in plain text
-
-It is possible to supply the body contents in plain text, this will broaden compatibility, 
-because some email clients don't support HTML and will download textual version instead.
-
-```ruby
-batch = Emarsys::Broadcast::Batch.new
-batch.name = 'newsletter_2013_06_01'
-batch.subject = 'June 2013 company news'
-batch.body_html = '<h1>Dear 朋友!</h1>'
-batch.body_text = 'Dear 朋友'
-```
 
 ### Batch validation
 
@@ -149,6 +183,18 @@ rescue Emarsys::Broadcast::ValidationException => ex
 end
 ```
 
+### Scheduling batches
+
+By default a new batch is scheduled for immediate sending, but you can set the `send_time`
+
+```ruby
+# Assuming using ActiveSupport and want to schedule a batch to be sent in 10 days
+batch.send_time = Time.zone.now + 10.days
+# .. more attributes
+
+api.send_batch batch
+```
+
 ### CSV file requirements
 
 The recipients must be placed in a `UTF-8` CSV file.
@@ -177,12 +223,11 @@ Having additional columns allows you to customize your body_html, for example:
 <h1>Hi, $$FIRST_NAME$$</h1>
 ```
 
-### Batch sender_id requirements
+### Working with senders
 
-Emarsys requires that API users maintain a list of possible senders, and restricts
-sending emails from arbitrary sender.
+#### Adding a new sender
 
-To use any `sender_id` in your batch, create it first:
+Adding a sender is required before you can start using its email address as a Batch#sender attribute
 
 ```ruby 
 # assuming you have API configured already
@@ -195,11 +240,9 @@ api.create_sender sender
 Once you upload a sender, you can use its ID in any batch:
 
 ```ruby
-batch.sender_id = 'primary_newsletter_sender'
+batch.sender = 'news@company.com'
 # more attributes
 ```
-
-### Working with senders
 
 #### Getting a full list of senders
 
@@ -214,23 +257,12 @@ api.get_senders
 api.get_sender('news@mycompany.ru')
 ```
 
-#### Find if a sender exists by email
+#### Finding if a sender exists by email
 
 ```ruby
 api.sender_exists? 'news@mycompany.ru'
 ```
 
-### Scheduling batches
-
-By default a new batch is scheduled for immediate sending, but you can set the `send_time`
-
-```ruby
-# Assuming using ActiveSupport and want to schedule a batch to be sent in 10 days
-batch.send_time = Time.zone.now + 10.days
-# .. more attributes
-
-api.send_batch batch
-```
 
 ### Compatibility
 

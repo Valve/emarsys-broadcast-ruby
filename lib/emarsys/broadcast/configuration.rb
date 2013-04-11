@@ -17,7 +17,9 @@ module Emarsys
         :api_timeout,
         :sender,
         :sender_domain,
-        :recipients_path
+        :recipients_path,
+        # https://e3.emarsys.net/bmapi/v2/doc/Properties.html#ImportDelay
+        :import_delay_hours
 
 
       def initialize
@@ -27,6 +29,7 @@ module Emarsys
         @api_base_path = '/bmapi/v2'
         @api_port = 80
         @api_timeout = 600 #10 minutes
+        @import_delay_hours = 1
       end
     end
 

@@ -14,6 +14,7 @@ module Emarsys
               xml.property(key: :Language){xml.text 'en'}
               xml.property(key: :Encoding){xml.text 'UTF-8'}
               xml.property(key: :Domain){xml.text batch.sender_domain}
+              xml.property(key: :ImportDelay){xml.text batch.import_delay_hours}
             }
             xml.subject batch.subject
             xml.html batch.body_html

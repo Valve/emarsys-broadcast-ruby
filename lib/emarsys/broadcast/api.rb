@@ -61,6 +61,7 @@ module Emarsys
         batch.send_time ||= Time.now
         batch.sender ||= @config.sender
         batch.sender_domain ||= @config.sender_domain
+        batch.import_delay_hours ||= @config.import_delay_hours
         batch
       end
 

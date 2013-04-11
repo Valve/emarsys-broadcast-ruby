@@ -7,12 +7,13 @@ module Emarsys
         :name, 
         :subject,
         :body_html,
-        :body_text,
         :recipients_path,
+        :body_text,
         :send_time,
         :sender,
         :sender_domain,
-        :sender_id
+        :sender_id,
+        :import_delay_hours
 
         validates :name, :subject, :body_html, :recipients_path, :sender, :sender_domain, presence: true
         validates :name, format: {with: /^[^\d\W]\w*\z/i, message: 'must start with a letter and contain only letters, numbers and underscores'}
