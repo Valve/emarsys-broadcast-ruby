@@ -79,7 +79,9 @@ Valid email, registed with Emarsys.
 
 Emarsys maintains a list of allowed sender emails, and restricts
 sending emails from arbitrary email. If you want to use an email as a 
-sender, refer to 
+sender, refer to  (working with senders)[#working-with-senders]
+
+_Can be set once via configuration_
 
 #### Batch#body_html 
 
@@ -116,6 +118,8 @@ it will be scheduled for immediate sending.
 
 Time in hours which is allowed for import to be delayed after batch import. Defaults to 1 hour.
 
+_Can be set once via configuration_
+
 
 ### Moving batch properties to configuration
 
@@ -148,13 +152,12 @@ batch.body_html = '<h1>Dear 朋友!</h1>'
 * sender (required attribute)
 * sender_domain (required attribute)
 * recipients_path (required attribute)
-* import_delay_hours (optional attribute) see more [here](#)
-
+* import_delay_hours (optional attribute) see more [here](#batchimport-delay-hours)
 
 
 ### Batch validation
 
-Emarsys::Broadcast uses ActiveModel for validating plain ruby objects, so you have all the methods for 
+`Emarsys::Broadcast` uses `ActiveModel` for validating plain ruby objects, so you have all the methods for 
 validation you're accustomed to:
 
 ```ruby
@@ -168,7 +171,7 @@ batch.errors.full_messages
 
 You can always validate your batch before submitting it.
 
-Note that calling api#send_batch on an invalid batch will throw ValidationException
+Note that calling `API#send_batch` on an invalid batch will throw `ValidationException`
 
 ```ruby
 batch = get_invalid_batch
@@ -185,7 +188,7 @@ end
 
 ### Scheduling batches
 
-By default a new batch is scheduled for immediate sending, but you can set the `send_time`
+By default a new batch is scheduled for immediate sending, but you can set the `Batch#send_time`
 
 ```ruby
 # Assuming using ActiveSupport and want to schedule a batch to be sent in 10 days
@@ -227,7 +230,7 @@ Having additional columns allows you to customize your body_html, for example:
 
 #### Adding a new sender
 
-Adding a sender is required before you can start using its email address as a Batch#sender attribute
+Adding a sender is required before you can start using its email address as a `Batch#sender`
 
 ```ruby 
 # assuming you have API configured already
@@ -237,7 +240,7 @@ sender = Emarsys::Broadcast::Sender.new('primary_newsletter_sender', 'My company
 api.create_sender sender
 ```
 
-Once you upload a sender, you can use its ID in any batch:
+Once you add a sender, you can use its email in any batch:
 
 ```ruby
 batch.sender = 'news@company.com'
@@ -248,7 +251,7 @@ batch.sender = 'news@company.com'
 
 ```ruby
 api.get_senders 
-# returns Sender array
+# returns array of `Emarsys::Broadcast::Sender`
 ```
 
 #### Getting a single sender by email
