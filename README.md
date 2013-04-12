@@ -79,7 +79,7 @@ Valid email, registed with Emarsys.
 
 Emarsys maintains a list of allowed sender emails, and restricts
 sending emails from arbitrary email. If you want to use an email as a 
-sender, refer to  (working with senders)[#working-with-senders]
+sender, refer to  [working with senders](#working-with-senders)
 
 _Can be set once via configuration_
 
@@ -152,7 +152,7 @@ batch.body_html = '<h1>Dear 朋友!</h1>'
 * sender (required attribute)
 * sender_domain (required attribute)
 * recipients_path (required attribute)
-* import_delay_hours (optional attribute) see more [here](#batchimport-delay-hours)
+* import_delay_hours (optional attribute) see more [here](#batchimport_delay_hours)
 
 
 ### Batch validation
