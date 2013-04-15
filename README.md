@@ -38,11 +38,11 @@ end
 
 # create a batch that you want to send
 batch = Emarsys::Broadcast::Batch.new
-batch.sender = 'sender_id'
+batch.sender = 'news@company.com'
 batch.name = 'newsletter_2013_06_01'
 batch.subject = 'June 2013 company news'
 batch.body_html = '<h1>Dear 朋友!</h1>'
-batch.recipients_path = '/path/to/your/csv/with/emails'
+batch.recipients_path = '/path/to/your/csv/with/emails.csv'
 
 # create API client
 api = Emarsys::Broadcast::API.new
