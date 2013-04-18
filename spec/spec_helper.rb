@@ -20,6 +20,7 @@ def create_valid_config
     c.api_password = 'a'
 
     c.sender = spec_sender
+    c.recipients_path = '/some/path.csv'
   end
 end
 

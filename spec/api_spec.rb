@@ -24,6 +24,8 @@ describe Emarsys::Broadcast::API do
   end
 
   describe '#send_batch' do
+
+    let(:batch){create_minimal_batch}
     let(:api) do 
       api = Emarsys::Broadcast::API.new
       api.stub(upload_recipients: true) #sftp call
@@ -31,6 +33,8 @@ describe Emarsys::Broadcast::API do
     end
     before{stub_senders_ok_two_senders}
     before{stub_post_ok}
+
+
     it 'should raise ValidationError if passed invalid batch' do
       expect {
         invalid_batch = Emarsys::Broadcast::Batch.new
@@ -38,20 +42,20 @@ describe Emarsys::Broadcast::API do
       }.to raise_error Emarsys::Broadcast::ValidationError
     end
 
-    context 'sender validation' do
-      it 'should raise ValidationError if such sender does not exist' do
-        batch = create_minimal_batch
-        expect{
-          api.send_batch minimal_batch
-        }
-      end
+    it 'should raise ValidationError if such sender does not exist' do
+      valid_batch = create_minimal_batch
+      valid_batch.sender = 'nonexistent@sender.com'
+      expect{
+        api.send_batch valid_batch
+      }.to raise_error Emarsys::Broadcast::ValidationError
     end
 
-    it 'should call #create_batch when given a valid batch' do
+    it 'should post to batch creation Emarsys URL given a valid batch' do
+      api.send_batch(batch)
+      WebMock.should have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name')
     end
 
     context 'batch supplementation from config' do
-      let(:batch){create_minimal_batch}
 
       describe 'recipients_path' do
         before(:each)do 
