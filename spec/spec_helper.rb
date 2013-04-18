@@ -2,6 +2,7 @@
 require 'bundler/setup'
 require 'emarsys/broadcast'
 require 'timecop'
+require 'webmock/rspec'
 
 
 def restore_default_config
@@ -22,24 +23,13 @@ def create_valid_config
   end
 end
 
-def create_full_batch
-  batch = Emarsys::Broadcast::Batch.new
-  batch.name="test_batch_#{Time.now.to_i}"
-  batch.subject = 'די שטאַט פון ישראל'
-  batch.body_html = '<h1>די שטאט ווערט שוין דערמאנט אין תנ"ך. לויט געוויסע איז אליעזר (עבד אברהם) פון דמשק. דוד המלך, האט מלחמה געהאלטן און איינגענומען דמשק. און שפעטער מלכי ישראל. דאס איז שוין 3,000 יאר צוריק.<i>!</i></h1>'
-  batch.sender = 'פייַןבאָכער@gmail.com'
-  batch.sender_domain = 'google.com'
-  batch.send_time = Time.now + 1000000
-  batch
-end
-
 def create_minimal_batch
   batch = Emarsys::Broadcast::Batch.new
   batch.name="batch_name"
   batch.subject = 'subject'
   batch.body_html = 'body'
   batch.send_time = spec_time
-  batch.sender_id = 'sender_id'
+  batch.sender = 'sender1@example.com'
   batch.sender_domain = 'e3.emarsys.net'
   batch
 end
@@ -50,7 +40,7 @@ def create_minimal_html_batch
   batch.subject = 'subject'
   batch.body_html = '<h1>hello</h1>'
   batch.send_time = spec_time
-  batch.sender_id = 'sender_id'
+  batch.sender = 'sender1@example.com'
   batch.sender_domain = 'e3.emarsys.net'
   batch
 end
@@ -61,5 +51,22 @@ end
 
 def spec_sender
   'abc@example.com'
+end
+
+def stub_senders_ok_two_senders(senders = [])
+  fixture_path = File.dirname(__FILE__) + '/fixtures/responses/senders_200_two_senders.http'
+  stub_request(:get, "https://a:a@e3.emarsys.net/bmapi/v2/senders")
+    .with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'application/xml', 'User-Agent'=>'Ruby'})
+    .to_return(File.new fixture_path)
+end
+
+def stub_post_ok
+  fixture_path = File.dirname(__FILE__) + '/fixtures/responses/ok.http'
+  stub_request(:post, %r{https://a:a@e3.emarsys.net/bmapi/v2/.*}).to_return(http_ok)
+end
+
+def http_ok
+  fixture_path = File.dirname(__FILE__) + '/fixtures/responses/ok.http'
+  File.new fixture_path
 end
 

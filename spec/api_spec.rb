@@ -24,34 +24,47 @@ describe Emarsys::Broadcast::API do
   end
 
   describe '#send_batch' do
-    let(:api){Emarsys::Broadcast::API.new}
-    let(:empty_batch){Emarsys::Broadcast::Batch.new}
+    let(:api) do 
+      api = Emarsys::Broadcast::API.new
+      api.stub(upload_recipients: true) #sftp call
+      api
+    end
+    before{stub_senders_ok_two_senders}
+    before{stub_post_ok}
     it 'should raise ValidationError if passed invalid batch' do
       expect {
         invalid_batch = Emarsys::Broadcast::Batch.new
-        api.send_batch empty_batch
+        api.send_batch invalid_batch
       }.to raise_error Emarsys::Broadcast::ValidationError
     end
 
-    context 'batch supplementation from config' do
-      let(:api) do
-        api = Emarsys::Broadcast::API.new
-        api.stub(validate_batch: true, validate_sender: true, create_batch: true, upload_recipients: true, 
-          trigger_import: true)
-        api
+    context 'sender validation' do
+      it 'should raise ValidationError if such sender does not exist' do
+        batch = create_minimal_batch
+        expect{
+          api.send_batch minimal_batch
+        }
       end
-      let(:batch){Emarsys::Broadcast::Batch.new}
+    end
+
+    it 'should call #create_batch when given a valid batch' do
+    end
+
+    context 'batch supplementation from config' do
+      let(:batch){create_minimal_batch}
+
       describe 'recipients_path' do
         before(:each)do 
           create_valid_config
           Emarsys::Broadcast.configuration.recipients_path = '/path/from/configuration'
         end
         it 'is in config but not in batch, batch should be updated with recipients_path from config' do
+          batch.recipients_path = nil
           api.send_batch batch
           expect(batch.recipients_path).to eq '/path/from/configuration'
         end
         it 'is in config and in batch, batch should not be updated with recipients_path from config' do
-          batch = Emarsys::Broadcast::Batch.new(recipients_path: '/path/from/batch')
+          batch.recipients_path = '/path/from/batch'
           api.send_batch batch
           expect(batch.recipients_path).to eq '/path/from/batch'
         end
@@ -60,18 +73,19 @@ describe Emarsys::Broadcast::API do
       describe 'sender' do
         before(:each) do
           create_valid_config
-          Emarsys::Broadcast.configuration.sender = 'sender@configuration.com'
+          Emarsys::Broadcast.configuration.sender = 'sender1@example.com'
         end
 
         it 'is in config but not in batch, batch should be updated with sender from config' do
+          batch.sender = nil
           api.send_batch batch
-          expect(batch.sender).to eq 'sender@configuration.com'
+          expect(batch.sender).to eq 'sender1@example.com'
         end
 
         it 'is in config and in batch, batch should not be updated with sender from config' do
-          batch = Emarsys::Broadcast::Batch.new(sender: 'sender@batch.com')
+          batch.sender = 'sender2@example.com'
           api.send_batch batch
-          expect(batch.sender).to eq 'sender@batch.com'
+          expect(batch.sender).to eq 'sender2@example.com'
         end
       end
 
@@ -82,12 +96,13 @@ describe Emarsys::Broadcast::API do
         end
 
         it 'is in config but not in batch, batch should be updated with sender_domain from config' do
+          batch.sender_domain = nil
           api.send_batch batch
           expect(batch.sender_domain).to eq 'configuration.com'
         end
 
         it 'is in config and in batch, batch should not be updated with sender_domain from config' do
-          batch = Emarsys::Broadcast::Batch.new(sender_domain: 'batch.com')
+          batch.sender_domain = 'batch.com'
           api.send_batch batch
           expect(batch.sender_domain).to eq 'batch.com'
         end
@@ -100,12 +115,13 @@ describe Emarsys::Broadcast::API do
         end
 
         it 'is in config but not in batch, batch should be updated with import_delay_hours from config' do
+          batch.import_delay_hours = nil
           api.send_batch batch
           expect(batch.import_delay_hours).to eq 23
         end
 
         it 'is in config and in batch, batch should not be updated with import_delay_hours from config' do
-          batch = Emarsys::Broadcast::Batch.new(import_delay_hours: 17)
+          batch.import_delay_hours = 17
           api.send_batch batch
           expect(batch.import_delay_hours).to eq 17
         end
@@ -114,6 +130,7 @@ describe Emarsys::Broadcast::API do
       describe 'send_time' do
         it 'is not in batch, batch should be scheduled for current time' do
           Timecop.freeze(spec_time) do
+            batch.send_time = nil
             api.send_batch batch
             expect(batch.send_time).to eq spec_time
           end

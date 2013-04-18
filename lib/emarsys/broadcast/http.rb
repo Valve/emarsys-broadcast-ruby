@@ -47,7 +47,6 @@ module Emarsys
 
           case res
           when Net::HTTPSuccess
-            puts "OK"
             return res.body
           else
             puts res.body

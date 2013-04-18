@@ -1,0 +1,19 @@
+HTTP/1.1 200 OK
+Date: Thu, 18 Apr 2013 09:45:50 GMT
+Server: Noelios-Restlet-Engine/1.1.10
+Content-Type: application/xml; charset=UTF-8
+Content-Length: 3376
+Vary: Accept-Charset,Accept-Encoding,Accept-Language,Accept
+Accept-Ranges: bytes
+Via: 1.1 e3.emarsys.net
+
+<?xml version='1.0' encoding='utf-8'?>
+        <senders>
+        <sender id="sender_id_1">
+            <name>Sender 1</name>
+            <address>sender1@example.com</address>
+        </sender><sender id="sender_id_2">
+            <name>Sender 2</name>
+            <address>sender2@example.com</address>
+        </sender>
+        </senders>

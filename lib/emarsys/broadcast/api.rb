@@ -70,10 +70,9 @@ module Emarsys
       end
 
       def validate_sender(email)
-        msg = 'This email is not registered with Emarsys as a sender, register it with `create_sender` api call'
-        raise ValidationError, msg, [msg] unless sender_exists? email 
+        msg = "Email `#{email}` is not registered with Emarsys as a sender, register it with `create_sender` api call"
+        raise ValidationError.new(msg, [msg]) unless sender_exists? email 
       end
     end
-    class ApiError < StandardError; end
   end
 end
