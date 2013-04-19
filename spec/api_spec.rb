@@ -1,8 +1,12 @@
 require 'spec_helper'
 
 describe Emarsys::Broadcast::API do
-  before(:each){create_valid_config}
+  before(:each) do 
+    create_valid_config
+    stub_senders_ok_two_senders
+  end
   let(:config){create_valid_config}
+
   describe 'initialize' do
     context 'when configured properly' do
 
@@ -31,7 +35,6 @@ describe Emarsys::Broadcast::API do
       api.stub(upload_recipients: true) #sftp call
       api
     end
-    before{stub_senders_ok_two_senders}
     before{stub_post_ok}
 
 
@@ -53,6 +56,11 @@ describe Emarsys::Broadcast::API do
     it 'should post to batch creation Emarsys URL given a valid batch' do
       api.send_batch(batch)
       WebMock.should have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name')
+    end
+
+    it 'should post to batch import Emarsys URL given a valid batch' do
+      api.send_batch(batch)
+      WebMock.should have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name/import')
     end
 
     context 'batch supplementation from config' do
@@ -148,6 +156,18 @@ describe Emarsys::Broadcast::API do
           end
         end
       end
+    end
+  end
+
+  describe '#get_senders' do
+    let(:api){Emarsys::Broadcast::API.new}
+    it 'should call Emarsys URL for getting senders via GET' do
+      api.get_senders
+      WebMock.should have_requested(:get, 'https://a:a@e3.emarsys.net/bmapi/v2/senders')
+    end
+
+    it 'should return an array of senders' do
+      expect(api.get_senders).to be_a Array
     end
   end
 end
