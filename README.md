@@ -1,6 +1,6 @@
 # Emarsys::Broadcast a ruby wrapper for Emarsys batch mailing API
 
-[![Build Status](https://travis-ci.org/Valve/emarsys-broadcast-ruby.png)](https://travis-ci.org/Valve/emarsys-broadcast-ruby)
+[![Build Status](https://travis-ci.org/Valve/emarsys-broadcast-ruby.svg)](https://travis-ci.org/Valve/emarsys-broadcast-ruby)
 [![Code Climate](https://codeclimate.com/github/Valve/emarsys-broadcast-ruby.png)](https://codeclimate.com/github/Valve/emarsys-broadcast-ruby)
 
 ## Installation
