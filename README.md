@@ -2,7 +2,6 @@
 <h2>Emarsys::Broadcast</h2>
 <h3>Ruby library for Emarsys batch mailing API</h3>
 <br/>
-<br/>
 <a href="https://travis-ci.org/Valve/emarsys-broadcast-ruby">
   <img src="http://img.shields.io/travis/Valve/emarsys-broadcast-ruby/master.svg?style=flat" />
 </a>
@@ -278,7 +277,7 @@ api.sender_exists? 'news@mycompany.ru'
 ### Compatibility
 
 This gem is tested on
-* MRI `1.9.2`, `1.9.3`, `2.0.0`
+* MRI `2.1.2`
 * JRuby 1.9 mode
 
 
