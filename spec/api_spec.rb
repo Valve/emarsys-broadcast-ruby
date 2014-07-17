@@ -16,13 +16,13 @@ describe Emarsys::Broadcast::API do
       end
 
       it 'should instantiate sftp' do
-        Emarsys::Broadcast::SFTP.should_receive(:new).with(config)
-        api = Emarsys::Broadcast::API.new
+        expect(Emarsys::Broadcast::SFTP).to receive(:new).with(config)
+        Emarsys::Broadcast::API.new
       end
 
       it 'should instantiate http' do
-        Emarsys::Broadcast::HTTP.should_receive(:new).with(config)
-        api = Emarsys::Broadcast::API.new
+        expect(Emarsys::Broadcast::HTTP).to receive(:new).with(config)
+        Emarsys::Broadcast::API.new
       end
     end
   end
@@ -30,9 +30,9 @@ describe Emarsys::Broadcast::API do
   describe '#send_batch' do
 
     let(:batch){create_minimal_batch}
-    let(:api) do 
+    let(:api) do
       api = Emarsys::Broadcast::API.new
-      api.stub(upload_recipients: true) #sftp call
+      allow(api).to receive(:upload_recipients){true}
       api
     end
     before{stub_post_ok}
@@ -55,12 +55,12 @@ describe Emarsys::Broadcast::API do
 
     it 'should post to batch creation Emarsys URL given a valid batch' do
       api.send_batch(batch)
-      WebMock.should have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name')
+      expect(WebMock).to have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name')
     end
 
     it 'should post to batch import Emarsys URL given a valid batch' do
       api.send_batch(batch)
-      WebMock.should have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name/import')
+      expect(WebMock).to have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name/import')
     end
 
     context 'batch supplementation from config' do
@@ -163,7 +163,7 @@ describe Emarsys::Broadcast::API do
     let(:api){Emarsys::Broadcast::API.new}
     it 'should call Emarsys URL for getting senders via GET' do
       api.get_senders
-      WebMock.should have_requested(:get, 'https://a:a@e3.emarsys.net/bmapi/v2/senders')
+      expect(WebMock).to have_requested(:get, 'https://a:a@e3.emarsys.net/bmapi/v2/senders')
     end
 
     it 'should return an array of senders' do

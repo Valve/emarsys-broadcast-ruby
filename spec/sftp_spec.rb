@@ -84,14 +84,14 @@ describe Emarsys::Broadcast::SFTP do
 
     describe '#upload_file' do
       it 'should call Net::SFTP.start with sftp configuration values' do
-        Net::SFTP.should_receive(:start).with(config.sftp_host, config.sftp_user, password: config.sftp_password)
+        expect(Net::SFTP).to receive(:start).with(config.sftp_host, config.sftp_user, password: config.sftp_password)
         sftp.upload_file('local_file', 'remote_file')
       end
 
       it 'should take an instance of SFTP as a block argument and call #upload! on it with file paths' do
-        mock_session = mock('session')
-        Net::SFTP.stub(:start).and_yield mock_session
-        mock_session.should_receive(:upload!).with('local_file', 'remote_file')
+        mock_session = double('session')
+        allow(Net::SFTP).to receive(:start).and_yield mock_session
+        expect(mock_session).to receive(:upload!).with('local_file', 'remote_file')
         sftp.upload_file('local_file', 'remote_file')
       end
     end
